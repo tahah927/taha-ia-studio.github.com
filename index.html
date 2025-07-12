@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Video IA</title>
+  <style>
+    body { font-family: sans-serif; padding: 30px; text-align: center; background: #f4f4f4; }
+    input, button { font-size: 18px; padding: 10px; margin: 10px; width: 300px; }
+  </style>
+</head>
+<body>
+  <h1>🎬 Crear Video con IA</h1>
+  <input id="topic" type="text" placeholder="Escribe un tema..." />
+  <br>
+  <button onclick="crearVideo()">🎥 Crear Video</button>
+  <p id="estado"></p>
+
+  <script>
+    async function crearVideo() {
+      const topic = document.getElementById('topic').value;
+      if (!topic) return alert("Escribe un tema primero");
+
+      document.getElementById('estado').innerText = "Generando video... espera 30 segundos...";
+
+      const res = await fetch('https://TU-PROYECTO.up.railway.app/create-video', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ topic })
+      });
+
+      if (!res.ok) {
+        document.getElementById('estado').innerText = "❌ Error al generar video";
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'video_final.mp4';
+      a.click();
+
+      document.getElementById('estado').innerText = "✅ ¡Video generado!";
+    }
+  </script>
+</body>
+</html>
